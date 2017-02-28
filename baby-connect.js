@@ -75,29 +75,6 @@ Connect.prototype.getStatus = function(day,kid) {
     });
 }
 
-function doGet(url,nextCookie,referer,callback) {
-    let headers = {
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
-    };
-    if(nextCookie) {
-        headers['Cookie'] = nextCookie;
-    }
-    if(referer) {
-        headers['Referer'] = referer;
-    }
-    request.get(url,{
-        strictSSL:false,
-        headers
-    },(error,response,body) => {
-        if(error) {
-            callback(error);
-        } else {
-            let nextCookie = findNextCookie(response);
-            callback(undefined,{nextCookie:nextCookie,body:body,statusCode:response.statusCode,location:response.headers['location']});
-        }
-    });
-}
-
 function doPost(url,nextCookie,formdata,callback) {
     let headers = {
         'Content-Type':'application/x-www-form-urlencoded',
