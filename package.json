@@ -4,15 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "istanbul cover node_modules/mocha/bin/_mocha"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adrianba/baby-connect-api.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Ade Bateman (https://adebateman.org/)",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/adrianba/baby-connect-api/issues"
   },
@@ -21,5 +21,9 @@
     "axios": "^0.15.3",
     "cookie": "^0.3.1",
     "request": "^2.79.0"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0"
   }
 }
