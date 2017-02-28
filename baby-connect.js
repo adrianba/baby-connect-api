@@ -30,32 +30,6 @@ Connect.prototype.login = function() {
         });
     });
 }
-/*
-Connect.prototype.getUserData = function() {
-    return new Promise((resolve,reject) => {
-        doGet('https://www.baby-connect.com/home',this.nextCookie,'https://www.baby-connect.com/login',(error,result) => {
-            if(error) {
-                reject(error);
-            } else {
-                if(result.statusCode===200) {
-                    if(result.nextCookie) {
-                        this.nextCookie = result.nextCookie;
-                    }
-                    let r = new RegExp(/var _x =\s+({"Name":.*);/,'m');
-                    let m = r.exec(result.body);
-                    if(m) {
-                        resolve(JSON.parse(m[1]));
-                    } else {
-                        reject("userData not found");
-                    }
-                } else {
-                    reject("Unexpected response " + result.statusCode);
-                }
-            }
-        });
-    });
-}
-*/
 
 Connect.prototype.getUserInfo = function() {
     let formData = {
