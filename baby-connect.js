@@ -76,18 +76,11 @@ Connect.prototype.getStatus = function(day,kid) {
 }
 
 function doPost(url,nextCookie,formdata,callback) {
-    let headers = {
-        'Content-Type':'application/x-www-form-urlencoded',
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
-    };
-    if(nextCookie) {
-        headers['Cookie'] = nextCookie;
-    }
     request.post(url,{
         form: formdata,
         followRedirect: false,
         strictSSL:false,
-        headers
+        headers:postHeaders(nextCookie)
     },(error,response,body) => {
         if(error) {
             callback(error);
@@ -105,6 +98,17 @@ function findNextCookie(response) {
             return 'seacloud1=' + c.seacloud1;
         }
     }
+}
+
+function postHeaders(nextCookie) {
+    let headers = {
+        'Content-Type':'application/x-www-form-urlencoded',
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
+    };
+    if(nextCookie) {
+        headers['Cookie'] = nextCookie;
+    }
+    return headers;    
 }
 
 module.exports = Connect;
