@@ -82,7 +82,6 @@ function doPost(url,nextCookie,formdata,callback) {
     request.post(url,{
         form: formdata,
         followRedirect: false,
-        strictSSL:false,
         headers:postHeaders(nextCookie)
     },(error,response,body) => {
         if(error) {
