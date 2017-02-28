@@ -2,7 +2,7 @@
   "name": "baby-connect-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "baby-connect.js",
   "scripts": {
     "test": "istanbul cover node_modules/mocha/bin/_mocha"
   },
@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/adrianba/baby-connect-api#readme",
   "dependencies": {
-    "axios": "^0.15.3",
     "cookie": "^0.3.1",
     "request": "^2.79.0"
   },

@@ -7,8 +7,13 @@ const username = process.env.BABYCONNECTUSER;
 const password = process.env.BABYCONNECTPWD;
 
 describe('Testing BabyConnect',() => {
+    it('new should be optional',() => {
+        let bc = BabyConnect(username,password);
+        assert(bc instanceof BabyConnect);
+    });
+
     it('should login with correct credientials',() => {
-        let bc = new BabyConnect(username,password);
+        let bc = BabyConnect(username,password);
         return bc.login()
         .then(result => {
             assert(result,"login should resolve with true for success");
@@ -16,7 +21,7 @@ describe('Testing BabyConnect',() => {
     });
 
     it('should fail login with incorrect credientials',() => {
-        let bc = new BabyConnect("demo@demo.com","demo");
+        let bc = BabyConnect("demo@demo.com","demo");
         return bc.login()
         .then(result => {
             assert(!result,"login should resolve with false for failure");
@@ -24,7 +29,7 @@ describe('Testing BabyConnect',() => {
     });
 
     it('should return user info',() => {
-        let bc = new BabyConnect(username,password);
+        let bc = BabyConnect(username,password);
         return bc.login()
         .then(result => {
             assert(result,"login should resolve with true for success");
@@ -35,7 +40,7 @@ describe('Testing BabyConnect',() => {
     });
 
     it('should return kid status',() => {
-        let bc = new BabyConnect(username,password);
+        let bc = BabyConnect(username,password);
         return bc.login()
         .then(result => {
             assert(result,"login should resolve with true for success");

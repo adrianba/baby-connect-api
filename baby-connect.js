@@ -2,9 +2,12 @@ const request = require('request');
 const cookie = require('cookie');
 
 function Connect(username,password) {
+    if(!(this instanceof Connect)) {
+        return new Connect(username,password);
+    }
+
     this.username = username;
     this.password = password;
-
     this.nextCookie = "";
 };
 
