@@ -69,7 +69,6 @@ Connect.prototype.getStatus = function(p) {
     if(p.kid) {
         formData.Kid = p.kid;
     }
-    console.log(formData);
     return new Promise((resolve,reject) => {
         doPost('https://www.baby-connect.com/CmdListW?cmd=StatusList',this.nextCookie,formData,(error,result) => {
             if(error) {

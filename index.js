@@ -9,7 +9,7 @@ bc.login().then(result => {
     return bc.getUserInfo();
 }).then(result => {
     let kid = result.myKids[0].Id;
-    return bc.getStatus('170226',kid);
+    return bc.getStatus({kid});
 }).then(result => {
     console.log(result);
 }).catch(error => {
