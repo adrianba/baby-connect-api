@@ -9,6 +9,8 @@ function Connect(username,password) {
     this.username = username;
     this.password = password;
     this.nextCookie = "";
+    this.userInfo = null;
+    this.userInfoTime = 0;
 };
 
 Connect.prototype.login = function() {
@@ -35,22 +37,29 @@ Connect.prototype.login = function() {
 }
 
 Connect.prototype.getUserInfo = function() {
-    let formData = {
-    };
-    return new Promise((resolve,reject) => {
-        doPost('https://www.baby-connect.com/CmdW?cmd=UserInfoW',this.nextCookie,formData,(error,result) => {
-            if(error) {
-                reject(error);
-            } else {
-                if(result.statusCode===200) {
-                    if(result.nextCookie) {
-                        this.nextCookie = result.nextCookie;
-                    }
-                    resolve(JSON.parse(result.body));
-                }
-            }
-        });
+  if(this.userInfo && (Date.now() - this.userInfoTime)<60000) {
+    console.log("Using cached user info");
+    return Promise.resolve(this.userInfo);
+  }
+  let formData = {
+  };
+  return new Promise((resolve,reject) => {
+    doPost('https://www.baby-connect.com/CmdW?cmd=UserInfoW',this.nextCookie,formData,(error,result) => {
+      if(error) {
+        this.userInfo = null;
+        reject(error);
+      } else {
+        if(result.statusCode===200) {
+          if(result.nextCookie) {
+            this.nextCookie = result.nextCookie;
+          }
+          this.userInfo = JSON.parse(result.body);
+          this.userInfoTime = Date.now();
+          resolve(this.userInfo);
+        }
+      }
     });
+  });
 }
 
 Connect.prototype.getStatus = function(p) {
