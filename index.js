@@ -8,10 +8,10 @@ bc.login().then(result => {
   if(!result) throw 'Login error';
   return bc.getUserInfo();
 }).then(result => {
-  return bc.getUserInfo();
-}).then(result => {
   console.log(result);
-  let kid = result.myKids[0].Id;
+  return bc.lookupKid('George');
+}).then(kid => {
+  console.log(kid);
   return bc.getStatus({kid});
 }).then(result => {
   console.log(result);

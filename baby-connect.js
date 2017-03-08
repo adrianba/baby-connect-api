@@ -38,7 +38,6 @@ Connect.prototype.login = function() {
 
 Connect.prototype.getUserInfo = function() {
   if(this.userInfo && (Date.now() - this.userInfoTime)<60000) {
-    console.log("Using cached user info");
     return Promise.resolve(this.userInfo);
   }
   let formData = {
@@ -58,6 +57,23 @@ Connect.prototype.getUserInfo = function() {
           resolve(this.userInfo);
         }
       }
+    });
+  });
+}
+
+Connect.prototype.lookupKid = function(childName) {
+  if(!childName) return Promise.resolve(undefined);
+  return new Promise((resolve,reject) => {
+    this.getUserInfo().then(info => {
+      childName = childName.toLowerCase();
+      for(let c=0; c<info.myKids.length; c++) {
+          if(childName==info.myKids[c].Name.toLowerCase()) {
+              resolve(info.myKids[c].Id);
+          }
+      }
+      resolve(undefined);
+    }).catch(ex => {
+      reject(ex);
     });
   });
 }
