@@ -53,15 +53,23 @@ Connect.prototype.getUserInfo = function() {
     });
 }
 
-Connect.prototype.getStatus = function(day,kid) {
+Connect.prototype.getStatus = function(p) {
     let formData = {
-            pdt:day,
             fmt:'long',
             '_ts_':Date.now()
     };
-    if(kid) {
-        formData.Kid = kid;
+    if(!p.day) {
+      let now = new Date();
+      let today = now.getFullYear().toString().substr(-2)
+          + ("0" + (now.getMonth()+1).toString()).substr(-2)
+          + ("0" + now.getDate().toString()).substr(-2);
+      p.day = today;
     }
+    formData.pdt = p.day;
+    if(p.kid) {
+        formData.Kid = p.kid;
+    }
+    console.log(formData);
     return new Promise((resolve,reject) => {
         doPost('https://www.baby-connect.com/CmdListW?cmd=StatusList',this.nextCookie,formData,(error,result) => {
             if(error) {
@@ -110,7 +118,7 @@ function postHeaders(nextCookie) {
     if(nextCookie) {
         headers['Cookie'] = nextCookie;
     }
-    return headers;    
+    return headers;
 }
 
 module.exports = Connect;
