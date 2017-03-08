@@ -1,7 +1,7 @@
 {
   "name": "baby-connect-api",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "API to access Baby Connect data",
   "main": "baby-connect.js",
   "scripts": {
     "test": "istanbul cover node_modules/mocha/bin/_mocha"
