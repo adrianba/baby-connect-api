@@ -66,12 +66,10 @@ Connect.prototype.lookupKid = function(childName) {
   return new Promise((resolve,reject) => {
     this.getUserInfo().then(info => {
       childName = childName.toLowerCase();
-      for(let c=0; c<info.myKids.length; c++) {
-          if(childName==info.myKids[c].Name.toLowerCase()) {
-              resolve(info.myKids[c].Id);
-          }
-      }
-      resolve(undefined);
+      let kid = info.myKids.find(k => k.Name.toLowerCase()==childName);
+      // if there is only one kid assume that one was meant
+      if(!kid && info.myKids.length===1) { kid = info.myKids[0]; }
+      resolve(kid ? kid.Id : undefined);
     }).catch(ex => {
       reject(ex);
     });
