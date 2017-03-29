@@ -46,7 +46,7 @@ describe('Testing BabyConnect',() => {
             assert(result,"login should resolve with true for success");
             return bc.getUserInfo();
         }).then(result => {
-            return bc.getStatus('170226',result.myKids[0].Id);
+            return bc.getStatus({kid:result.myKids[0].Id});
         }).then(result => {
             assert(result.list.length>0,"list collection should not be empty");
         });

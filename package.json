@@ -1,6 +1,6 @@
 {
   "name": "baby-connect-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "API to access Baby Connect data",
   "main": "baby-connect.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/adrianba/baby-connect-api#readme",
   "dependencies": {
     "cookie": "^0.3.1",
+    "node-cache": "^4.1.1",
     "request": "^2.79.0"
   },
   "devDependencies": {

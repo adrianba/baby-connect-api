@@ -1,5 +1,6 @@
 const request = require('request');
 const cookie = require('cookie');
+const NodeCache = require('node-cache');
 
 function Connect(username,password) {
     if(!(this instanceof Connect)) {
@@ -9,8 +10,7 @@ function Connect(username,password) {
     this.username = username;
     this.password = password;
     this.nextCookie = "";
-    this.userInfo = null;
-    this.userInfoTime = 0;
+    this._cache = new NodeCache({checkPeriod:0,useClones:false});
 };
 
 Connect.prototype.login = function() {
@@ -37,24 +37,24 @@ Connect.prototype.login = function() {
 }
 
 Connect.prototype.getUserInfo = function() {
-  if(this.userInfo && (Date.now() - this.userInfoTime)<60000) {
-    return Promise.resolve(this.userInfo);
+  let info = this._cache.get('userinfo');
+  if(info) {
+    return Promise.resolve(info);
   }
   let formData = {
   };
   return new Promise((resolve,reject) => {
     doPost('https://www.baby-connect.com/CmdW?cmd=UserInfoW',this.nextCookie,formData,(error,result) => {
       if(error) {
-        this.userInfo = null;
         reject(error);
       } else {
         if(result.statusCode===200) {
           if(result.nextCookie) {
             this.nextCookie = result.nextCookie;
           }
-          this.userInfo = JSON.parse(result.body);
-          this.userInfoTime = Date.now();
-          resolve(this.userInfo);
+          info = JSON.parse(result.body);
+          this._cache.set('userinfo',info,60);
+          resolve(info);
         }
       }
     });
@@ -89,9 +89,17 @@ Connect.prototype.getStatus = function(p) {
       p.day = today;
     }
     formData.pdt = p.day;
+    let cacheId = "status-" + formData.pdt;
     if(p.kid) {
         formData.Kid = p.kid;
+        cacheId += "-" + p.kid;
     }
+
+    let status = this._cache.get(cacheId);
+    if(status) {
+      return Promise.resolve(status);
+    }
+
     return new Promise((resolve,reject) => {
         doPost('https://www.baby-connect.com/CmdListW?cmd=StatusList',this.nextCookie,formData,(error,result) => {
             if(error) {
@@ -101,7 +109,9 @@ Connect.prototype.getStatus = function(p) {
                     if(result.nextCookie) {
                         this.nextCookie = result.nextCookie;
                     }
-                    resolve(JSON.parse(result.body));
+                    status = JSON.parse(result.body);
+                    this._cache.set(cacheId,status,10);
+                    resolve(status);
                 }
             }
         });
