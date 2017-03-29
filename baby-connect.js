@@ -1,14 +1,17 @@
 const request = require('request');
 const cookie = require('cookie');
+const tc = require('timezonecomplete');
 const NodeCache = require('node-cache');
 
-function Connect(username,password) {
+function Connect(username,password,timezone) {
     if(!(this instanceof Connect)) {
-        return new Connect(username,password);
+        return new Connect(username,password,timezone);
     }
 
     this.username = username;
     this.password = password;
+    let tz = timezone && tc.TzDatabase.instance().exists(timezone) ? timezone : "US/Pacific";
+    this.timezone = tc.zone(tz);
     this.nextCookie = "";
     this._cache = new NodeCache({checkPeriod:0,useClones:false});
 };
@@ -82,11 +85,7 @@ Connect.prototype.getStatus = function(p) {
             '_ts_':Date.now()
     };
     if(!p.day) {
-      let now = new Date();
-      let today = now.getFullYear().toString().substr(-2)
-          + ("0" + (now.getMonth()+1).toString()).substr(-2)
-          + ("0" + now.getDate().toString()).substr(-2);
-      p.day = today;
+      p.day = getToday(this.timezone);
     }
     formData.pdt = p.day;
     let cacheId = "status-" + formData.pdt;
@@ -116,6 +115,14 @@ Connect.prototype.getStatus = function(p) {
             }
         });
     });
+}
+
+function getToday(tz) {
+  let now = tc.now(tz);
+  let today = now.year().toString().substr(-2)
+      + ("0" + now.month().toString()).substr(-2)
+      + ("0" + now.day().toString()).substr(-2);
+  return today;
 }
 
 function doPost(url,nextCookie,formdata,callback) {
