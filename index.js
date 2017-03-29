@@ -15,6 +15,9 @@ bc.login().then(result => {
   return bc.getStatus({kid});
 }).then(result => {
   console.log(result);
+  return bc.getSleepStatus({kid:result.summary.kidId});
+}).then(result => {
+  console.log(result);
 }).catch(error => {
   console.error(error);
 });

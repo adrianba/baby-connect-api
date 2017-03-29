@@ -117,12 +117,36 @@ Connect.prototype.getStatus = function(p) {
     });
 }
 
+Connect.prototype.getSleepStatus = function(p) {
+  return this.getStatus(p).then(result => {
+    let lastSleep = new tc.DateTime(result.summary.timeOfLastSleeping + " " + this.timezone.name(),"MM/dd/yyyy HH:mm zzzz");
+    let now = tc.now(this.timezone);
+    let diff = now.diff(lastSleep);
+
+    return {
+      isSleeping: result.summary.isSleeping,
+      elapsedMinutes: Math.floor(diff.minutes()),
+      elapsedRendered: renderDuration(diff)
+    }
+  });
+};
+
 function getToday(tz) {
   let now = tc.now(tz);
   let today = now.year().toString().substr(-2)
       + ("0" + now.month().toString()).substr(-2)
       + ("0" + now.day().toString()).substr(-2);
   return today;
+}
+
+function renderDuration(d) {
+  if(d.wholeHours()===0) {
+    return d.minute() + " minutes";
+  } else if(d.wholeHours()===1) {
+    return "1 hour " + d.minute() + " minutes";
+  } else {
+    return d.wholeHours() + " hours " + d.minute() + " minutes";
+  }
 }
 
 function doPost(url,nextCookie,formdata,callback) {
