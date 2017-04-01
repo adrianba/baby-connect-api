@@ -79,6 +79,16 @@ Connect.prototype.lookupKid = function(childName) {
   });
 }
 
+Connect.prototype.getChildList = function() {
+  return new Promise((resolve,reject) => {
+    this.getUserInfo().then(info => {
+      resolve(info.myKids.map(child => ({id:child.Id,name:child.Name})));
+    }).catch(ex => {
+      reject(ex);
+    });
+  });
+}
+
 Connect.prototype.getStatus = function(p) {
     let formData = {
             fmt:'long',
