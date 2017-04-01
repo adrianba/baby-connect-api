@@ -136,6 +136,62 @@ Connect.prototype.getSleepStatus = function(p) {
     return {
       isSleeping: result.summary.isSleeping,
       elapsedMinutes: Math.floor(diff.minutes()),
+      elapsedRendered: renderDuration(diff),
+      totalMinutes: result.summary.totalSleepDuration,
+      totalRendered: renderDuration(tc.minutes(result.summary.totalSleepDuration))
+    }
+  });
+};
+
+Connect.prototype.getBottleStatus = function(p) {
+  return this.getStatus(p).then(result => {
+    let lastBottle = new tc.DateTime(result.summary.timeOfLastBottle + " " + this.timezone.name(),"MM/dd/yyyy HH:mm zzzz");
+    let now = tc.now(this.timezone);
+    let diff = now.diff(lastBottle);
+
+    return {
+      elapsedMinutes: Math.floor(diff.minutes()),
+      elapsedRendered: renderDuration(diff),
+      totalOunces: result.summary.totalBottleSize,
+      totalRendered: renderOunces(result.summary.totalBottleSize)
+    }
+  });
+};
+
+Connect.prototype.getNursingStatus = function(p) {
+  return this.getStatus(p).then(result => {
+    let lastNursing = new tc.DateTime(result.summary.timeOfLastNursing + " " + this.timezone.name(),"MM/dd/yyyy HH:mm zzzz");
+    let now = tc.now(this.timezone);
+    let diff = now.diff(lastNursing);
+
+    return {
+      elapsedMinutes: Math.floor(diff.minutes()),
+      elapsedRendered: renderDuration(diff)
+    }
+  });
+};
+
+Connect.prototype.getPumpingStatus = function(p) {
+  return this.getStatus(p).then(result => {
+    let lastPumping = new tc.DateTime(result.summary.timeOfLastPumping + " " + this.timezone.name(),"MM/dd/yyyy HH:mm zzzz");
+    let now = tc.now(this.timezone);
+    let diff = now.diff(lastPumping);
+
+    return {
+      elapsedMinutes: Math.floor(diff.minutes()),
+      elapsedRendered: renderDuration(diff)
+    }
+  });
+};
+
+Connect.prototype.getDiaperStatus = function(p) {
+  return this.getStatus(p).then(result => {
+    let lastDiaper = new tc.DateTime(result.summary.timeOfLastDiaper + " " + this.timezone.name(),"MM/dd/yyyy HH:mm zzzz");
+    let now = tc.now(this.timezone);
+    let diff = now.diff(lastDiaper);
+
+    return {
+      elapsedMinutes: Math.floor(diff.minutes()),
       elapsedRendered: renderDuration(diff)
     }
   });
@@ -157,6 +213,10 @@ function renderDuration(d) {
   } else {
     return d.wholeHours() + " hours " + d.minute() + " minutes";
   }
+}
+
+function renderOunces(q) {
+  return q===1 ? "1 ounce" : q + " ounces";
 }
 
 function doPost(url,nextCookie,formdata,callback) {
