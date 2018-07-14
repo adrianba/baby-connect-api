@@ -2,6 +2,7 @@ const request = require("request");
 const cookie = require("cookie");
 const tc = require("timezonecomplete");
 const NodeCache = require("node-cache");
+const DATE_FORMAT_STRING = "MM/dd/yyyy HH:mm VV";
 
 function Connect(username, password, timezone) {
   if (!(this instanceof Connect)) {
@@ -150,7 +151,7 @@ Connect.prototype.getSleepStatus = function(p) {
   return this.getStatus(p).then(result => {
     let lastSleep = new tc.DateTime(
       result.summary.timeOfLastSleeping + " " + this.timezone.name(),
-      "MM/dd/yyyy HH:mm zzzz"
+      DATE_FORMAT_STRING
     );
     let now = tc.now(this.timezone);
     let diff = now.diff(lastSleep);
@@ -169,7 +170,7 @@ Connect.prototype.getBottleStatus = function(p) {
   return this.getStatus(p).then(result => {
     let lastBottle = new tc.DateTime(
       result.summary.timeOfLastBottle + " " + this.timezone.name(),
-      "MM/dd/yyyy HH:mm zzzz"
+      DATE_FORMAT_STRING
     );
     let now = tc.now(this.timezone);
     let diff = now.diff(lastBottle);
@@ -187,7 +188,7 @@ Connect.prototype.getNursingStatus = function(p) {
   return this.getStatus(p).then(result => {
     let lastNursing = new tc.DateTime(
       result.summary.timeOfLastNursing + " " + this.timezone.name(),
-      "MM/dd/yyyy HH:mm zzzz"
+      DATE_FORMAT_STRING
     );
     let now = tc.now(this.timezone);
     let diff = now.diff(lastNursing);
@@ -203,7 +204,7 @@ Connect.prototype.getPumpingStatus = function(p) {
   return this.getStatus(p).then(result => {
     let lastPumping = new tc.DateTime(
       result.summary.timeOfLastPumping + " " + this.timezone.name(),
-      "MM/dd/yyyy HH:mm zzzz"
+      DATE_FORMAT_STRING
     );
     let now = tc.now(this.timezone);
     let diff = now.diff(lastPumping);
@@ -219,7 +220,7 @@ Connect.prototype.getDiaperStatus = function(p) {
   return this.getStatus(p).then(result => {
     let lastDiaper = new tc.DateTime(
       result.summary.timeOfLastDiaper + " " + this.timezone.name(),
-      "MM/dd/yyyy HH:mm zzzz"
+      DATE_FORMAT_STRING
     );
     let now = tc.now(this.timezone);
     let diff = now.diff(lastDiaper);
@@ -233,7 +234,11 @@ Connect.prototype.getDiaperStatus = function(p) {
 
 function getToday(tz) {
   let now = tc.now(tz);
-  let today = now.year().toString().substr(-2) +
+  let today =
+    now
+      .year()
+      .toString()
+      .substr(-2) +
     ("0" + now.month().toString()).substr(-2) +
     ("0" + now.day().toString()).substr(-2);
   return today;
@@ -289,7 +294,8 @@ function findNextCookie(response) {
 function postHeaders(nextCookie) {
   let headers = {
     "Content-Type": "application/x-www-form-urlencoded",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36"
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36"
   };
   if (nextCookie) {
     headers["Cookie"] = nextCookie;
