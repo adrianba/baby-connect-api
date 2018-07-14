@@ -1,6 +1,6 @@
 {
   "name": "baby-connect-api",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "API to access Baby Connect data",
   "main": "baby-connect.js",
   "scripts": {
